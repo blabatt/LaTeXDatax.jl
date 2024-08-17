@@ -24,7 +24,7 @@ cd(@__DIR__)
 
     LaTeXDatax.printkeyval(io, :b, 200000.0; raw = true)
     # @test String(take!(io)) == "\\pgfkeyssetvalue{/datax/b}{\$20\$}\n"
-    @test String(take!(io)) == "\\def\\b{200000.0}\n"
+    @test String(take!(io)) == "\\pgfkeyssetvalue{/datax/b}{\$2 \\cdot 10^{5}\$}\n\\def\\b{200000.0}\n"
 
     # complete macro
     a = 2
@@ -36,10 +36,14 @@ cd(@__DIR__)
     \\pgfkeyssetvalue{/datax/c}{\\num{6}}
     \\pgfkeyssetvalue{/datax/d}{\\num{27}}
     """
-    @datax a b = 3.14159 io := io raw := true
+    @datax a b = 3.14159 c = 5u"J" io := io raw := true
     @test String(take!(io)) == """
+    \\pgfkeyssetvalue{/datax/a}{\$2\$}
     \\def\\a{2}
+    \\pgfkeyssetvalue{/datax/b}{\$3.142\$}
     \\def\\b{3.14159}
+    \\pgfkeyssetvalue{/datax/c}{\$5\\;\\mathrm{J}\$}
+    \\def\\c{5}
     """
 
     # Write to file

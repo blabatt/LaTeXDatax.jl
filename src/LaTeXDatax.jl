@@ -101,14 +101,17 @@ function datax(filename::String, names, values; permissions="w", kwargs...)
 end
 
 function printkeyval(io::IO, name, value; kwargs...)
+    prefixes = ["\\pgfkeyssetvalue{/datax/"]; postfixes = ["}{"]; printfns = Function[(io,v; kwargs...) -> printdata(io,v; kwargs...)]
     if haskey(kwargs, :raw) && kwargs[:raw]
-      prefix = "\\def\\"; postfix = "{"; printfn = (io,v; kwargs...) -> print(io, v)
-    else
-      prefix = "\\pgfkeyssetvalue{/datax/"; postfix = "}{"; printfn = (io,v; kwargs...) -> printdata(io,v; kwargs...)
+      push!(prefixes,"\\def\\");
+      push!(postfixes,"{");
+      push!(printfns,(io,v; kwargs...) -> print(io, ustrip(v)))
+    end #else
+    for (prefix,postfix,printfn) in zip(prefixes,postfixes,printfns)
+      print(io, prefix , name, postfix)
+      (printfn)(io, value; kwargs...)
+      print(io, "}\n")
     end
-    print(io, prefix , name, postfix)
-    (printfn)(io, value; kwargs...)
-    print(io, "}\n")
     return nothing
 end
 
