@@ -22,6 +22,10 @@ cd(@__DIR__)
     LaTeXDatax.printkeyval(io, :a, 612.2u"nm")
     @test String(take!(io)) == "\\pgfkeyssetvalue{/datax/a}{\$612.2\\;\\mathrm{nm}\$}\n"
 
+    LaTeXDatax.printkeyval(io, :b, 200000.0; raw = true)
+    # @test String(take!(io)) == "\\pgfkeyssetvalue{/datax/b}{\$20\$}\n"
+    @test String(take!(io)) == "\\def\\b{200000.0}\n"
+
     # complete macro
     a = 2
     b = 3.2u"m"
@@ -31,6 +35,11 @@ cd(@__DIR__)
     \\pgfkeyssetvalue{/datax/b}{\\qty{3.2}{\\meter}}
     \\pgfkeyssetvalue{/datax/c}{\\num{6}}
     \\pgfkeyssetvalue{/datax/d}{\\num{27}}
+    """
+    @datax a b = 3.14159 io := io raw := true
+    @test String(take!(io)) == """
+    \\def\\a{2}
+    \\def\\b{3.14159}
     """
 
     # Write to file

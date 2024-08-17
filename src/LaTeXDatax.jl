@@ -101,8 +101,13 @@ function datax(filename::String, names, values; permissions="w", kwargs...)
 end
 
 function printkeyval(io::IO, name, value; kwargs...)
-    print(io, "\\pgfkeyssetvalue{/datax/", name, "}{")
-    printdata(io, value; kwargs...)
+    if haskey(kwargs, :raw) && kwargs[:raw]
+      prefix = "\\def\\"; postfix = "{"; printfn = (io,v; kwargs...) -> print(io, v)
+    else
+      prefix = "\\pgfkeyssetvalue{/datax/"; postfix = "}{"; printfn = (io,v; kwargs...) -> printdata(io,v; kwargs...)
+    end
+    print(io, prefix , name, postfix)
+    (printfn)(io, value; kwargs...)
     print(io, "}\n")
     return nothing
 end
