@@ -1,5 +1,5 @@
 module LaTeXDatax
-using Unitful, UnitfulLatexify, Latexify
+using DynamicQuantities, Latexify
 
 export @datax
 
@@ -116,7 +116,7 @@ function printkeyval(io::IO, name, value; kwargs...)
 end
 
 printdata(io::IO, v::String; kwargs...) = print(io, v)
-printdata(io::IO, v::Number; kwargs...) = print(io, latexify(v * u"one"; kwargs...))
+printdata(io::IO, v::Number; kwargs...) = print(io, latexify(v; kwargs...))
 printdata(io::IO, v; kwargs...) = print(io, latexify(v; kwargs...))
 
 end # module

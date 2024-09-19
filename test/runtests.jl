@@ -50,7 +50,7 @@ cd(@__DIR__)
     rm.(("data.tex", "test.pdf", "test.log"); force=true)
     @datax a b c = 3 * a d = 27 unitformat := :siunitx filename := "data.tex"
     @test isfile("data.tex")
-    @test_nowarn run(`pdflatex --file-line-error --interaction=nonstopmode test.tex`)
+    @test run(`pdflatex --file-line-error --interaction=nonstopmode test.tex`)
     rm("test.aux"; force=true)
 end
 @testset "Formatting" begin
