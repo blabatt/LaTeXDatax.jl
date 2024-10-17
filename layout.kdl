@@ -9,12 +9,6 @@ layout {
         }
     }
     tab name="src" cwd="./src" {
-		pane split_direction="vertical" {
-			command "nvim"
-			args "LaTeXDatax.jl"
-		}
-    }
-    tab name="env" cwd="." {
 		floating_panes {
 			pane name="terminal" {
 				x "25%"
@@ -23,8 +17,18 @@ layout {
 				height "50%"
 			}
 		}
-		pane name="edit" size="60%" focus=true {
-			command "julia"
+		pane split_direction="vertical" {
+			command "nvim"
+			args "LaTeXDatax.jl"
+		}
+    }
+    tab name="env" cwd="." {
+		pane split_direction="vertical" {
+			pane name="julia" command="julia" size="60%"
+			pane name="env" {
+				command "nvim"
+				args  "layout.kdl" ".gitignore" ".JuliaFormatter.toml"
+			}
 		}
 	}
     tab name="test" cwd="./test" {
